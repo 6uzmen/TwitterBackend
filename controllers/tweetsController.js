@@ -23,30 +23,25 @@ module.exports = {
       .catch(next);
   },
   myTweets(req, res, next) {
-
+    
     let username = req.query.username;
-    let userId;
     let { skip = 0, limit = 20 } = req.query;
 
     skip = Number(skip);
     limit = Number(limit);
 
-    Promise.all([User.findOne({ username })]).then(([userData]) => userId = userData._id);
-
-    Promise.all([
-      Tweet.find({author:userId})
-      //   .sort({ createdAt: "desc" })
-      //   .skip(skip)
-      //   .limit(limit)
-      //   .populate("author")
-      //   .exec(),
-      // Tweet.countDocuments(),
-    ])
-      .then(([tweets, total]) => {
-        console.log(tweets);
-        res.json({ tweets, hasMore: skip + limit < total });
-        console.log(total + " a")
-      })
-      .catch(next);
+    Promise.all([User.findOne({ username })]).then(([userData]) => {
+      Promise.all([
+        Tweet.find({ author: userData })
+          .sort({ createdAt: "desc" })
+          .skip(skip)
+          .limit(limit)
+          .populate("author"),
+      ])
+        .then(([tweets, total]) => {
+          res.json({ tweets, hasMore: skip + limit < total });
+        })
+        .catch(next);
+    });
   },
 };
