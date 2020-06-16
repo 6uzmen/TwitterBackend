@@ -4,11 +4,24 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   username: String,
+  email: String,
   bio: String,
   profileImg: String,
   tweets: String,
-  following: String,
-  followers: String,
+  following: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+  ],
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+  ]
 });
 
 module.exports = model("User", userSchema);
