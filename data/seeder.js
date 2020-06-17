@@ -2,24 +2,41 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 const faker = require("faker");
+const bcrypt = require('bcrypt');
 
 const { User, Tweet } = require("./models");
 
 const NUMBER_OF_USERS = 15;
-const NUMBER_OF_TWEETS = 100;
-const NUMBER_OF_FOLLOWERS = 15;
+const NUMBER_OF_TWEETS = 500;
+const NUMBER_OF_FOLLOWERS = 45;
 
-const users = [];
+//passwd = hack
+const users = [{
+  firstName: "Marcus",
+  lastName: "Sueco",
+  username: "marcusss",
+  password:  bcrypt.hashSync("hack", 10),
+  email: "ha@academy.com",
+  bio: "El profee",
+  profileImg: faker.image.fashion(),
+  followers: [],
+  following: [],
+}];
 const tweets = [];
 
 // Remove all documents from database, and then seed the database.
 Promise.all([User.deleteMany(), Tweet.deleteMany()]).then(() => {
   // First, seed users.
+  console.log("Hasheando passwords...")
   for (let i = 0; i < NUMBER_OF_USERS; i++) {
+    
+    const hashPassword = bcrypt.hashSync(faker.address.city(), 10);
+    
     users.push({
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       username: faker.internet.userName(),
+      password: hashPassword,
       email: faker.internet.email(),
       bio: faker.hacker.phrase(),
       profileImg: faker.image.cats(),

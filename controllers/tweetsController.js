@@ -29,9 +29,9 @@ module.exports = {
       })
       .catch(next);
   },
-  myTweets(req, res, next) {
-    let username = req.query.username;
-    let { skip = 0, limit = 20 } = req.query;
+  userTweets(req, res, next) {
+
+    let { username, skip = 0, limit = 20 } = req.query;
 
     skip = Number(skip);
     limit = Number(limit);
@@ -51,13 +51,19 @@ module.exports = {
     });
   },
   home(req, res, next) {
-    let username = req.query.username;
+
+    let { username, limit = 20 } = req.query;
+
+    limit = Number(limit);
+
     let followersTweets = [];
 
     User.findOne({ username }).then((userData) => {
       const getFollowersTweets = async () => {
         for (let i = 0; i < userData.following.length; i++) {
-          await Tweet.find({ author: userData.following[i] }).then(
+          await Tweet.find({ author: userData.following[i] })
+          .limit(20)
+          .then(
             (followerData) => {
               followersTweets = [...followersTweets, ...followerData];
             }
@@ -67,28 +73,16 @@ module.exports = {
 
       getFollowersTweets().then(() => {
 
-        let ordenados = false;
-
-        while (!ordenados) {
-          ordenados = true;
-
-          for (var i = 0; i < followersTweets.length-1; i++) {
-            if (Date.parse(followersTweets[i].createdAt) > Date.parse(followersTweets[i + 1].createdAt)) {
-
-              ordenados = false;
-
-              let temp = followersTweets[i];
-              let temp2 = followersTweets[i + 1];
-
-              followersTweets[i] = temp2;
-              followersTweets[i + 1] = temp;
-            }
-          }
-        }
-
-         res.send(followersTweets);
+        //Sort tweets by Date
+        followersTweets.sort(
+          function(a, b){
+            return Date.parse(b.createdAt) - Date.parse(a.createdAt)
+          });
+              
+         res.send(followersTweets.slice(0,limit));
         
       });
+      
     });
   },
 };
