@@ -17,4 +17,6 @@ router.get("/home", jwtVerify, tweetsController.home);
 
 router.post("/login", authController.login);
 
+router.post("/register", authController.register)
+
 module.exports = router;
