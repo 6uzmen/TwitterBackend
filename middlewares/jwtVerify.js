@@ -7,7 +7,6 @@ module.exports = (req,res,next) => {
         if(err){
             return res.send("Token invalido.")
         }
-        console.log(decoded)
         req.decoded = decoded
         return next();
     })
