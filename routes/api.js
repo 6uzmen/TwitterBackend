@@ -2,6 +2,7 @@ const express = require("express");
 
 const tweetsController = require("../controllers/tweetsController");
 const authController = require("../controllers/authController");
+const userController = require("../controllers/userController");
 const jwtVerify = require("../middlewares/jwtVerify");
 
 const router = express.Router();
@@ -11,7 +12,7 @@ const router = express.Router();
 
 router.get("/tweets", tweetsController.tweets);
 
-router.get("/users", jwtVerify, tweetsController.users);
+router.get("/users", jwtVerify, userController.users);
 
 router.get("/userTweets", jwtVerify, tweetsController.userTweets);
 

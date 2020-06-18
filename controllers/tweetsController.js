@@ -2,13 +2,7 @@ const { Tweet, User } = require("../data/models");
 
 module.exports = {
   // GET: /api/tweets?skip={Number}&limit{Number}
-  users(req, res, next) {
-    Promise.all([User.find().sort({ createdAt: "desc" }).exec()])
-      .then(([users]) => {
-        res.json({ users });
-      })
-      .catch(next);
-  },
+  
   tweets(req, res, next) {
     let { skip = 0, limit = 100 } = req.query;
 
