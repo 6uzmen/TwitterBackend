@@ -57,9 +57,14 @@ module.exports = {
     let { username, limit = 20 } = req.query;
     limit = Number(limit);
 
-    console.log(username)
+    if(!username){
+      return res.json({error:"Username is undefined."})
+    } 
 
     User.findOne({ username }).then((userData) => {
+      if(!userData){
+        return res.json({error:"User not found."})
+      } 
       const getFollowersTweets = async () => {
         for (let i = 0; i < userData.following.length; i++) {
           await Tweet.find({ author: userData.following[i] })
