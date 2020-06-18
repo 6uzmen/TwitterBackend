@@ -12,8 +12,6 @@ module.exports = {
     Promise.all([
       Tweet.find()
         .sort({ createdAt: "desc" })
-        //.skip(skip)
-        //.limit(limit)
         .populate("author")
         .exec(),
       Tweet.countDocuments(),
@@ -26,21 +24,26 @@ module.exports = {
   },
   createTweet(req,res,){
 
-    let username
+    let username = req.query.username;
+    let content = req.query.content;
+
+    isUndefined(username,"Username",res);
+    isUndefined(content,"Content",res);
+
+    User.findOne({username: username})
+    .then()
 
   },
   userTweets(req, res, next) {
 
     let username = req.query.username;
-    let page = !req.query.page ? 0 : req.query.page 
-    let limit = !req.query.limit ? 10 : req.query.limit 
+    let page = !req.query._page ? 0 : req.query._page 
+    let limit = !req.query._limit ? 10 : req.query._limit 
 
     page = Number(page);
     limit = Number(limit);
 
-    if(!username){
-      return res.json({error:"Username is undefined."})
-    } 
+    isUndefined(username,"Username",res);
 
     Promise.all([User.findOne({ username })]).then(([userData]) => {
       Promise.all([
@@ -56,10 +59,14 @@ module.exports = {
         .catch(next);
     });
   },
-  home(req, res) {
+  followingTweets(req, res) {
 
+    let username = req.query.username;
+    let page = !req.query._page ? 0 : req.query._page 
+    let limit = !req.query._limit ? 10 : req.query._limit 
     let followersTweets = [];
-    let { username, limit = 20 } = req.query;
+
+    page = Number(page);
     limit = Number(limit);
 
     isUndefined(username,"Username",res);
@@ -71,7 +78,10 @@ module.exports = {
       const getFollowersTweets = async () => {
         for (let i = 0; i < userData.following.length; i++) {
           await Tweet.find({ author: userData.following[i] })
-          .limit(20)
+          .sort({ createdAt: "desc" })
+          .skip(page * limit)
+          .limit(limit)
+          .populate("author")
           .then(
             (followerData) => {
               followersTweets = [...followersTweets, ...followerData];
@@ -87,7 +97,7 @@ module.exports = {
           function(a, b){
             return Date.parse(b.createdAt) - Date.parse(a.createdAt)
           });
-              
+         res.set('Access-Control-Allow-Origin', '*');
          res.send(followersTweets.slice(0,limit));
         
       });

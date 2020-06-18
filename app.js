@@ -11,4 +11,4 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api",apiRouter);
 
 
-app.listen(3000)
+app.listen(3002)

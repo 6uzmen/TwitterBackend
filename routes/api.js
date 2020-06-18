@@ -18,7 +18,7 @@ router.get("/userTweets", jwtVerify, tweetsController.userTweets);
 
 //router.get("/home", jwtVerify, tweetsController.home);
 
-router.get("/home", tweetsController.home);
+router.get("/followingTweets", tweetsController.followingTweets);
 
 router.post("/login", authController.login);
 
