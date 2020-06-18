@@ -53,11 +53,11 @@ module.exports = {
   },
   home(req, res, next) {
 
+    let followersTweets = [];
     let { username, limit = 20 } = req.query;
-
     limit = Number(limit);
 
-    let followersTweets = [];
+    console.log(username)
 
     User.findOne({ username }).then((userData) => {
       const getFollowersTweets = async () => {
