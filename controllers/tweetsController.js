@@ -25,6 +25,7 @@ module.exports = {
       Tweet.countDocuments(),
     ])
       .then(([tweets, total]) => {
+        res.set('Access-Control-Allow-Origin', '*');
         res.json({ tweets, hasMore: skip + limit < total });
       })
       .catch(next);
