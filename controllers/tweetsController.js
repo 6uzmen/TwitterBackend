@@ -24,41 +24,50 @@ module.exports = {
       })
       .catch(next);
   },
+  createTweet(req,res,){
+
+    let username
+
+  },
   userTweets(req, res, next) {
 
-    let { username, skip = 0, limit = 20 } = req.query;
+    let username = req.query.username;
+    let page = !req.query.page ? 0 : req.query.page 
+    let limit = !req.query.limit ? 10 : req.query.limit 
 
-    skip = Number(skip);
-    limit = Number(limit);
-
-    Promise.all([User.findOne({ username })]).then(([userData]) => {
-      Promise.all([
-        Tweet.find({ author: userData })
-          .sort({ createdAt: "desc" })
-          .skip(skip)
-          .limit(limit)
-          .populate("author"),
-      ])
-        .then(([tweets, total]) => {
-          res.json({ tweets, hasMore: skip + limit < total });
-        })
-        .catch(next);
-    });
-  },
-  home(req, res, next) {
-
-    let followersTweets = [];
-    let { username, limit = 20 } = req.query;
+    page = Number(page);
     limit = Number(limit);
 
     if(!username){
       return res.json({error:"Username is undefined."})
     } 
 
+    Promise.all([User.findOne({ username })]).then(([userData]) => {
+      Promise.all([
+        Tweet.find({ author: userData })
+          .sort({ createdAt: "desc" })
+          .skip(page * limit)
+          .limit(limit)
+          .populate("author"),
+      ])
+        .then(([tweets, total]) => {
+          res.json({ tweets, hasMore: page + limit < total });
+        })
+        .catch(next);
+    });
+  },
+  home(req, res) {
+
+    let followersTweets = [];
+    let { username, limit = 20 } = req.query;
+    limit = Number(limit);
+
+    isUndefined(username,"Username",res);
+
     User.findOne({ username }).then((userData) => {
-      if(!userData){
-        return res.json({error:"User not found."})
-      } 
+
+      isUndefined(userData,"La informacion del usuario",res);
+
       const getFollowersTweets = async () => {
         for (let i = 0; i < userData.following.length; i++) {
           await Tweet.find({ author: userData.following[i] })
@@ -86,3 +95,9 @@ module.exports = {
     });
   },
 };
+
+  const isUndefined = (element,elementName,res) => {
+    if(!element){
+      return res.json({error:`${elementName} es invalide. ${element}`})
+    }
+  }
