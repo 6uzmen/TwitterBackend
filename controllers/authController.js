@@ -25,7 +25,7 @@ module.exports  = {
             }
 
             const token = jwt.sign({username:user.username}, process.env.JWT_SECRET);
-            return res.send(token)
+            return res.json({token:token})
             
         })
 
