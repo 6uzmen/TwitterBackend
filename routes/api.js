@@ -7,19 +7,25 @@ const jwtVerify = require("../middlewares/jwtVerify");
 
 const router = express.Router();
 
-//router.get("/tweets", jwtVerify, tweetsController.tweets);
+//Users
 
-router.get("/tweets", tweetsController.tweets);
+router.get("/allUsers", jwtVerify, userController.allUsers);
 
-router.post("/tweets", tweetsController.postTweet);
+router.get("/userData", userController.userData);
 
-router.get("/users", jwtVerify, userController.users);
+router.patch("/userUpdate", userController.userUpdate);
 
-router.get("/userTweets", jwtVerify, tweetsController.userTweets);
+//Tweets
 
-//router.get("/home", jwtVerify, tweetsController.home);
+router.get("/allTweets", tweetsController.allTweets);
+
+router.post("/createTweet", tweetsController.createTweet);
+
+router.get("/userTweets", tweetsController.userTweets);
 
 router.get("/followingTweets", tweetsController.followingTweets);
+
+//Auth
 
 router.post("/login", authController.login);
 
