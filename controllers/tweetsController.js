@@ -21,7 +21,7 @@ module.exports = {
   },
 
   createTweet(req, res) {
-    const { username, content } = req.body.username;
+    const { username, content } = req.body;
 
     if (!username) {
       return res.status(400).json({ error: "username missing" });
