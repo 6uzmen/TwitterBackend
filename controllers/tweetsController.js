@@ -2,16 +2,8 @@ const { Tweet, User } = require("../data/models");
 
 module.exports = {
   // GET: /api/tweets?skip={Number}&limit{Number}
-<<<<<<< HEAD
 
-  tweets(req, res, next) {
-||||||| d6cec2c
-  
-  tweets(req, res, next) {
-=======
-  
   allTweets(req, res, next) {
->>>>>>> 3a156ae795659f733d05e7dc50624a9498f93b14
     let { skip = 0, limit = 100 } = req.query;
 
     skip = Number(skip);
@@ -28,46 +20,32 @@ module.exports = {
       .catch(next);
   },
 
-<<<<<<< HEAD
-  postTweet(req, res) {
-    const { author, content } = req.body;
-||||||| d6cec2c
-    let username = req.query.username;
-    let content = req.query.content;
-=======
-    let username = req.body.username;
-    let content = req.body.content;
->>>>>>> 3a156ae795659f733d05e7dc50624a9498f93b14
+  createTweet(req, res) {
+    const { username, content } = req.body.username;
 
-    if (!author) {
-      return res.status(400).json({ error: "author missing" });
+    if (!username) {
+      return res.status(400).json({ error: "username missing" });
     }
 
-<<<<<<< HEAD
     if (!content) {
       return res.status(400).json({ error: "content missing" });
     }
-||||||| d6cec2c
-    User.findOne({username: username})
-    .then()
-=======
-    User.findOne({username: username})
-    .then((user)=>{
+
+    User.findOne({ username: username }).then((user) => {
       newTweet = new Tweet({
         content: content,
         author: user,
         likes: 0,
         createdAt: Date.now(),
-      })
-      newTweet.save((err) => {
-        if (err) {return res.json({error:`Ah ocurrido un error al crear el tweet. ${err}`})} ;
-        return res.json({succeed:`Se creó un nuevo Tweet!`});
       });
-    })
->>>>>>> 3a156ae795659f733d05e7dc50624a9498f93b14
-
-    Tweet.create({ author, content }).then((savedTweet) => {
-      response.json(savedTweet);
+      newTweet.save((err, savedTweet) => {
+        if (err) {
+          return res.json({
+            error: `Ah ocurrido un error al crear el tweet. ${err}`,
+          });
+        }
+        return res.json(savedTweet);
+      });
     });
   },
 
@@ -86,7 +64,7 @@ module.exports = {
         Tweet.find({ author: userData })
           .sort({ createdAt: "desc" })
           .skip(page * limit)
-          .limit(limit)
+          .limit(limit),
       ])
         .then(([tweets, total]) => {
           res.json({ tweets, hasMore: page + limit < total });
