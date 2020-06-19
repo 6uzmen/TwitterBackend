@@ -114,5 +114,4 @@ module.exports = {
 const isUndefined = (element, elementName, res) => {
   if (!element) {
     return res.json({ error: `${elementName} es invalide. ${element}` });
-  }
-};
+  }}
