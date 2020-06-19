@@ -11,13 +11,17 @@ const router = express.Router();
 
 router.get("/allUsers", jwtVerify, userController.allUsers);
 
+router.get("/userData", userController.userData);
+
+router.patch("/userUpdate", userController.userUpdate);
+
 //Tweets
 
 router.get("/allTweets", tweetsController.allTweets);
 
 router.post("/createTweet", tweetsController.createTweet);
 
-router.get("/userTweets", jwtVerify, tweetsController.userTweets);
+router.get("/userTweets", tweetsController.userTweets);
 
 router.get("/followingTweets", tweetsController.followingTweets);
 

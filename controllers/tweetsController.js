@@ -29,16 +29,14 @@ module.exports = {
 
     isUndefined(username,"Username",res);
     isUndefined(content,"Content",res);
-    console.log(username)
-    console.log("ddddd")
+
     User.findOne({username: username})
     .then((user)=>{
-      console.log(user)
       newTweet = new Tweet({
         content: content,
-        author: user._id,
+        author: user,
         likes: 0,
-        createdAt: "fecha de creacion",
+        createdAt: Date.now(),
       })
       newTweet.save((err) => {
         if (err) {return res.json({error:`Ah ocurrido un error al crear el tweet. ${err}`})} ;
@@ -64,7 +62,6 @@ module.exports = {
           .sort({ createdAt: "desc" })
           .skip(page * limit)
           .limit(limit)
-          .populate("author"),
       ])
         .then(([tweets, total]) => {
           res.json({ tweets, hasMore: page + limit < total });

@@ -10,6 +10,7 @@ module.exports  = {
     let username = req.body.username;
     let password = req.body.password;
 
+
     User.findOne({username:username})
     .then((user)=> {
 
