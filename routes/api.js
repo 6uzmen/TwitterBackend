@@ -7,10 +7,11 @@ const jwtVerify = require("../middlewares/jwtVerify");
 
 const router = express.Router();
 
-
 //router.get("/tweets", jwtVerify, tweetsController.tweets);
 
 router.get("/tweets", tweetsController.tweets);
+
+router.post("/tweets", tweetsController.postTweet);
 
 router.get("/users", jwtVerify, userController.users);
 
@@ -22,6 +23,6 @@ router.get("/followingTweets", tweetsController.followingTweets);
 
 router.post("/login", authController.login);
 
-router.post("/register", authController.register)
+router.post("/register", authController.register);
 
 module.exports = router;
