@@ -3,7 +3,7 @@ const { Tweet, User } = require("../data/models");
 module.exports = {
   // GET: /api/tweets?skip={Number}&limit{Number}
   
-  tweets(req, res, next) {
+  allTweets(req, res, next) {
     let { skip = 0, limit = 100 } = req.query;
 
     skip = Number(skip);
@@ -24,14 +24,27 @@ module.exports = {
   },
   createTweet(req,res,){
 
-    let username = req.query.username;
-    let content = req.query.content;
+    let username = req.body.username;
+    let content = req.body.content;
 
     isUndefined(username,"Username",res);
     isUndefined(content,"Content",res);
-
+    console.log(username)
+    console.log("ddddd")
     User.findOne({username: username})
-    .then()
+    .then((user)=>{
+      console.log(user)
+      newTweet = new Tweet({
+        content: content,
+        author: user._id,
+        likes: 0,
+        createdAt: "fecha de creacion",
+      })
+      newTweet.save((err) => {
+        if (err) {return res.json({error:`Ah ocurrido un error al crear el tweet. ${err}`})} ;
+        return res.json({succeed:`Se creó un nuevo Tweet!`});
+      });
+    })
 
   },
   userTweets(req, res, next) {
