@@ -9,7 +9,9 @@ const router = express.Router();
 
 //Users
 
-router.get("/allUsers", jwtVerify, userController.allUsers);
+//router.get("/allUsers", jwtVerify, userController.allUsers);
+router.get("/allUsers", userController.allUsers);
+
 
 router.get("/userData", userController.userData);
 

@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const User = require("./User");
 const Tweet = require("./Tweet");
 
-mongoose.connect("mongodb+srv://user:user@cluster0-ijws4.gcp.mongodb.net/twitter-camilo", {
+mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
